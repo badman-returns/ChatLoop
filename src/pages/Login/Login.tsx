@@ -8,6 +8,8 @@ type InputElement = React.ChangeEvent<HTMLInputElement>;
 const Login: React.FC = () => {
 
     const [isLogin, setIsLogin] = useState<boolean>(true);
+    const [isGuest, setIsGuest] = useState<boolean>(true);
+    const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -15,6 +17,7 @@ const Login: React.FC = () => {
     const { signUp, signIn, user } = useUserAuthentication();
     const navigate = useNavigate();
     const toast = useToast()
+    const nameRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const emailRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const passRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const confirmRef = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -33,6 +36,9 @@ const Login: React.FC = () => {
     }
 
     const setLogin = () => {
+        if (nameRef?.current.value !== null || nameRef.current.value !== "") {
+            nameRef.current.value = "";
+        }
         if (emailRef?.current.value !== null || emailRef?.current.value !== "") {
             emailRef.current.value = "";
         }
@@ -48,11 +54,16 @@ const Login: React.FC = () => {
         setConfirmPassword("");
     }
 
+    const setGuest = () => {
+        setIsGuest(true);
+        handleLogin();
+    }
+
     const handleRegister = async (): Promise<any> => {
         if (password === confirmPassword) {
             try {
-                await signUp(email, password);
-                setLogin();
+                await signUp(email, password, name);
+                navigate('/login');
             } catch (err) {
                 console.log(err);
             }
@@ -72,7 +83,7 @@ const Login: React.FC = () => {
 
     const handleLogin = async (): Promise<any> => {
         try {
-            await signIn(email, password);
+            await signIn(isGuest ? process.env.REACT_APP_GUEST_EMAIL : email, isGuest ? process.env.REACT_APP_GUEST_PASSWORD : password);
             navigate('/');
         } catch (err) {
             console.log(err);
@@ -94,18 +105,24 @@ const Login: React.FC = () => {
     });
     return (
         <Flex width="full" align="center" justifyContent="center">
-         <Box p={10} mt={10}>
+            <Box p={10} mt={10}>
                 <Box textAlign="center" m={4}>
                     <Heading>Welcome to Chatloop</Heading>
                 </Box>
                 <Box p={10} maxW='lg' minW='md' borderWidth='1px' borderRadius='lg' overflow='hidden' boxShadow="xl">
                     <Box textAlign='center' mb={4}>
-                        <Heading>Login</Heading>
+                        <Heading>{isLogin ? 'Login' : 'Register'}</Heading>
                     </Box>
+                   {!isLogin && <Box display='flex' alignItems='baseline'>
+                        <FormControl>
+                            <FormLabel htmlFor='name'>Name</FormLabel>
+                            <Input id='name' type='text' ref={nameRef} onInput={(e: InputElement) => setName(e.target.value)} />
+                        </FormControl>
+                    </Box>}
                     <Box display='flex' alignItems='baseline'>
                         <FormControl>
                             <FormLabel htmlFor='email'>Email address</FormLabel>
-                            <Input id='email' type='text' ref={emailRef} onInput={(e: InputElement) => setEmail(e.target.value)} />
+                            <Input id='email' type='email' ref={emailRef} onInput={(e: InputElement) => setEmail(e.target.value)} />
                         </FormControl>
                     </Box>
                     <Box display='flex' alignItems='baseline'>
@@ -123,7 +140,7 @@ const Login: React.FC = () => {
                     <Button mt={5} minW="100%" textAlign="center" bg='green.400' textColor="text.primary" variant='solid' onClick={isLogin ? handleLogin : handleRegister}>
                         {isLogin ? "Login" : "Register"}
                     </Button>
-                    {isLogin && <Button mt={5} minW="100%" textAlign="center" bg='pink.500' textColor="text.primary" variant='solid'>
+                    {isLogin && <Button mt={5} minW="100%" textAlign="center" bg='pink.500' textColor="text.primary" variant='solid' onClick={setGuest}>
                         Login as Guest
                     </Button>}
                     {isLogin ? (<Box mt={4} d='flex' justifyContent="center">
