@@ -29,7 +29,8 @@ const theme = extendTheme({
         }
     },
     fonts: {
-        heading: 'Noto Sans'
+        heading: 'Noto Sans',
+        text: 'Noto Sans'
     }
 })
 
