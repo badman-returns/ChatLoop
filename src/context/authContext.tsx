@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile, User } from 'firebase/auth';
 import { auth } from '../config/firebase.config';
 
 const AuthContext = createContext<any>(null);
@@ -8,12 +8,20 @@ const UserContextProvider: React.FC = ({ children }: any) => {
 
     const [user, setUser] = useState<any>(null);
 
-    function signUp(email: string, password: string) {
-        return createUserWithEmailAndPassword(auth, email, password)
+    function signUp(email: string, password: string, name: string) {
+        return createUserWithEmailAndPassword(auth, email, password).then(async(userCredentials) => {
+            await updateUserProfile(userCredentials.user, name);
+        });
     }
 
-    function signIn(email: string, password: string) {
+    function signIn(email: string, password: string, ) {
         return signInWithEmailAndPassword(auth, email, password);
+    }
+
+    function updateUserProfile(user: User, name: string){
+        updateProfile((user), {
+            displayName: name,
+        })
     }
 
     function logout() {
