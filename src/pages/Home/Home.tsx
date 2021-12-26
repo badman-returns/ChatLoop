@@ -1,33 +1,47 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Grid, GridItem } from '@chakra-ui/react';
 import ListView from '../../components/ListView/ListView';
 import TextView from '../../components/TextView/TextView';
 import { database } from '../../config/firebase.config';
-import { ref, onValue, set } from "firebase/database";
+import { ref, onValue, set, off } from "firebase/database";
+import { IChannelInfo } from '../../interfaces/channel';
 
 
-const Home: React.FC = () => {
+const Home: React.FC<any> = () => {
 
-    const createDefaultChannel = () => {
-        const channelRef = ref(database, 'channels');
+    const [channels, updateChannels] = useState<IChannelInfo[]>([]);
+
+    const channelRef = ref(database, 'channels');
+
+    const fetchChannelList = () => {
         onValue(channelRef, (snapshot) => {
-            const data = snapshot.val();
-            if (!data?.welcome) {
-                set(ref(database, 'channels/'), {
-                    welcome: {
-                        name: 'Welcome',
-                        description: 'Welcome to Chatloop',
-                        members: null,
-                        createdBy: 'system'
-                    }
-                });
+            let data = snapshot.val();
+            if (data === undefined || data === null) {
+                createDefaultChannel();
+            } else {
+                const channelList: Array<IChannelInfo> = Object.values(data);
+                updateChannels(channelList);
             }
         });
     }
 
+    const createDefaultChannel = () => {
+        const uid = 'id' + (new Date()).getTime();
+        set(ref(database, 'channels/' + uid), {
+            id: uid,
+            name: 'Welcome',
+            description: 'Welcome to Chatloop',
+            members: null,
+            createdBy: 'system'
+        });
+    };
+
     useEffect(() => {
-        createDefaultChannel();
-    }, [])
+        fetchChannelList();
+        return () => {
+            off(channelRef);
+        }
+    }, [channels]);
 
     return (
         <>
@@ -37,7 +51,7 @@ const Home: React.FC = () => {
                 templateColumns='repeat(5, 1fr)'
             >
                 <GridItem rowSpan={2} colSpan={1} bg='bg.200' >
-                    <ListView />
+                    <ListView  channels={channels}/>
                 </GridItem>
                 <GridItem rowSpan={2} colSpan={4} bg='bg.100' >
                     <TextView />
