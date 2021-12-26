@@ -1,29 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Input } from '@chakra-ui/react'
 import Header from './Header';
 import Footer from './Footer';
 import SearchIcon from '@material-ui/icons/Search'
 import Channel from '../Channel/Channel';
-import { database } from '../../config/firebase.config';
-import { ref, onValue } from "firebase/database";
-import { IChannelInfo } from '../../interfaces/channel';
+import { IChannels } from '../../interfaces/channel';
 
-const ListView: React.FC = () => {
-
-    const [channels, setChannels] = useState<Array<IChannelInfo>>([]);
-
-    const getChannels = () => {
-        const channelRef = ref(database, 'channels');
-        onValue((channelRef), (snapshot) => {
-            const data: Array<IChannelInfo> = Object.values(snapshot.val());
-            setChannels(data);
-            console.log(channels);
-        });
-    }
-
-    useEffect(() => {
-        getChannels();
-    }, []);
+const ListView = (props: IChannels) => {
 
     return (
         <>
@@ -44,8 +27,10 @@ const ListView: React.FC = () => {
                             </Box>
                             <Box p={2}>
                                 {
-                                    channels.map((channel) => (
-                                        <Channel name={channel.name} />
+                                    props.channels.map((channel) => (
+                                        <Box key={channel.id}>
+                                            <Channel name={channel.name} />
+                                        </Box>
                                     ))
                                 }
                             </Box>
