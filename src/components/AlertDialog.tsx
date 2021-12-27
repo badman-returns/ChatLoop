@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, Input, FormControl, FormLabel, Box } from '@chakra-ui/react'
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, Input, Box, Textarea } from '@chakra-ui/react'
 import { useUserAuthentication } from '../context/authContext';
 
 const ModalDialog = (props: any) => {
@@ -18,27 +18,18 @@ const ModalDialog = (props: any) => {
             <Modal isOpen={props.isOpen} onClose={props.onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Add Channel</ModalHeader>
+                    <ModalHeader>New Channel</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <Box display='flex' alignItems='baseline'>
-                            <FormControl>
-                                <FormLabel htmlFor='name'>Channel Name</FormLabel>
-                                <Input id='name' type='text' onInput={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
-                            </FormControl>
+                        <Box m={2} display='flex' alignItems='baseline'>
+                            <Input bg="bg.100" type='text' placeholder="Channel name" onInput={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
                         </Box>
-                        <Box display='flex' alignItems='baseline'>
-                            <FormControl>
-                                <FormLabel htmlFor='name'>Channel Description</FormLabel>
-                                <Input id='name' type='text' onInput={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)} />
-                            </FormControl>
+                        <Box m={2} display='flex' alignItems='baseline'>
+                            <Textarea bg="bg.100" resize="vertical" size="md" placeholder="Channel description" onInput={(e: React.FormEvent<HTMLTextAreaElement>) => setDescription(e.currentTarget.value)} />
                         </Box>
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme='red' mr={3} onClick={props.onClose}>
-                            Close
-                        </Button>
-                        <Button colorScheme='blue' type='submit' onClick={handleSubmit}>Save</Button>
+                        <Button bg='#2F80ED' type='submit' onClick={handleSubmit}>Save</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
