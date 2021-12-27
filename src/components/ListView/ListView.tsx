@@ -32,7 +32,7 @@ const ListView = (props: IChannels) => {
                             <Box p={2}>
                                 {
                                     props.channels.map((channel) => (
-                                        <Box _hover={{ cursor: 'pointer' }} key={channel.id} onClick={() => setChannelName(channel.name)}>
+                                        <Box _hover={{ cursor: 'pointer', backgroundColor:'#252329', borderRadius:'15px' }} key={channel.id} onClick={() => setChannelName(channel.name)}>
                                             <Channel name={channel.name} />
                                         </Box>
                                     ))
