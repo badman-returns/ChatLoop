@@ -47,13 +47,12 @@ const Home: React.FC<any> = () => {
         <>
             <Grid
                 h='100vh'
-                templateRows='repeat(2, 1fr)'
-                templateColumns='repeat(5, 1fr)'
+                templateColumns='repeat(6, 1fr)'
             >
-                <GridItem rowSpan={2} colSpan={1} bg='bg.200' >
+                <GridItem  colSpan={1} bg='bg.200' >
                     <ListView  channels={channels}/>
                 </GridItem>
-                <GridItem rowSpan={2} colSpan={4} bg='bg.100' >
+                <GridItem  colSpan={5} bg='bg.100' >
                     <TextView />
                 </GridItem>
             </Grid>

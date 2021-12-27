@@ -8,6 +8,11 @@ const AuthContext = createContext<any>(null);
 const UserContextProvider: React.FC = ({ children }: any) => {
 
     const [user, setUser] = useState<any>(null);
+    const [channel, setChannel] = useState<string>("");
+
+    function setChannelName(name: string){
+        setChannel(name);
+    }
 
     function signUp(email: string, password: string, name: string) {
         return createUserWithEmailAndPassword(auth, email, password).then(async (userCredentials) => {
@@ -58,7 +63,7 @@ const UserContextProvider: React.FC = ({ children }: any) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, signUp, signIn, logout }} > {children}
+        <AuthContext.Provider value={{ user, signUp, signIn, logout, setChannelName, channel }} > {children}
         </AuthContext.Provider>
     )
 }

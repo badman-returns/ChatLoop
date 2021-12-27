@@ -22,7 +22,7 @@ const theme = extendTheme({
             500: "#3182CE",
         },
         green: {
-            400 : "#48BB78"
+            400: "#48BB78"
         },
         pink: {
             500: "#D53F8C"
@@ -31,6 +31,15 @@ const theme = extendTheme({
     fonts: {
         heading: 'Noto Sans',
         text: 'Noto Sans'
+    },
+    components: {
+        Modal: {
+            baseStyle: (props: any) => ({
+                dialog: {
+                    bg: '#120F13'
+                }
+            })
+        },
     }
 })
 
