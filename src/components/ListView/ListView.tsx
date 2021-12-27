@@ -5,8 +5,12 @@ import Footer from './Footer';
 import SearchIcon from '@material-ui/icons/Search'
 import Channel from '../Channel/Channel';
 import { IChannels } from '../../interfaces/channel';
+import { useUserAuthentication } from '../../context/authContext';
+
 
 const ListView = (props: IChannels) => {
+
+    const { setChannelName } = useUserAuthentication()
 
     return (
         <>
@@ -28,7 +32,7 @@ const ListView = (props: IChannels) => {
                             <Box p={2}>
                                 {
                                     props.channels.map((channel) => (
-                                        <Box key={channel.id}>
+                                        <Box _hover={{ cursor: 'pointer' }} key={channel.id} onClick={() => setChannelName(channel.name)}>
                                             <Channel name={channel.name} />
                                         </Box>
                                     ))
